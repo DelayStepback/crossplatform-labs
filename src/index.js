@@ -2,18 +2,48 @@ function testFunc(x) {
     return x * x - Math.cos(x);
 }
 
-function integrateLeftRiemann(func, step) {
+function integrateLeftRiemann(func) {
     let a = parseInt(prompt('Enter a: '));
     let b = parseInt(prompt('Enter b: '));
+
+    let accuracy = 0.01;
+    let lastVal = -1000;
+    let currVal = 0;
+
+    let steps = 2;
+
+    // first iteration
     let total = 0;
-    for (let x = a; x < b; x += step) {
-        total += func(x) * step;
+    let stepSize = (b - a) / steps;
+
+
+    for (let i = 0; i < steps; i += 1) {
+        total += func(a + i*stepSize) * stepSize;
     }
-    return total;
+    currVal = total;
+
+    steps = steps * 2;
+
+    while (Math.abs(lastVal - currVal) > accuracy) {
+
+        total = 0;
+        stepSize = (b - a) / steps;
+        
+
+        for (let i = 0; i < steps; i += 1) {
+            total += func(a + i*stepSize) * stepSize;
+        }
+        lastVal = currVal;
+        currVal = total;
+
+        steps = steps * 2;
+
+    }
+
+
+    return currVal;
 }
 
 
-const step = 0.01; // step
-
-const result = integrateLeftRiemann(testFunc, step);
+let result = integrateLeftRiemann(testFunc);
 console.log(result); 
